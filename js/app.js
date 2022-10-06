@@ -20,12 +20,23 @@ eventListeners();
 function eventListeners() {
     //Este es el primer evento que se va a escuchar en el DOM; el submit del formulario.
     //NOTA QUE A PESAR DE QUE NO GUARDAMOS EL VALOR DEL INPUT "AGREGAR", AL ESTAR RELACIONADO CON EL FORMULARIO AL SER EL SUBMIT, SE PUEDE TRABAJAR CON LOS ELEMENTOS DEL FORMULARIO
+    //Cuando el usuario agrega un nuevo tweet
     formularioEl.addEventListener('submit', agregarTweet);
 
+    //Cuando el documento esta listo
+    document.addEventListener('DOMContentLoaded', () => {
+        //Intenta buscar en local storage los tweets y conviertelos a JSON parse, si marca null, asigna un array vacio
+        tweets = JSON.parse( localStorage.getItem('tweets') ) || [];
+
+        console.log(tweets);    
+
+        crearHTML();
+    });
 }
 
 
 /* F U N C I O N E S */
+
 function agregarTweet(e) {
     e.preventDefault();
     //Text Area donde el usuario escribe. Accederemos al valor de este elemento con la ayuda del metodo .value 
@@ -92,6 +103,13 @@ function crearHTML() {
             listaTweetsEl.appendChild(li);
         });
     }
+
+    sincronizarStorage();
+}
+
+// Agrega los tweets actuales a local storage
+function sincronizarStorage() {
+    localStorage.setItem('tweets', JSON.stringify(tweets));
 }
 
 // Limpiar el HTML
