@@ -30,7 +30,21 @@ function agregarTweet(e) {
     e.preventDefault();
     //Text Area donde el usuario escribe. Accederemos al valor de este elemento con la ayuda del metodo .value 
     const tweetEl = document.querySelector('#tweet').value;
-    console.log(tweetEl);
+
+    // Debemos añadir las entradas del usuario en el arreglo vacio que declaramos. Tomamos una copia de los tweets y le añadimos el ultimo valor del textarea
+    
+    const tweetObj = {
+        id: Date.now(),
+        tweetEl // Esto equivale tweet : tweet. Es decir, es un atajo cuando tenemos misma key y mismo value en un objeto
+    };
+
+    tweets = [...tweets, tweetObj];
+
+    //Una vez agregado, debemos crear el HTML
+    crearHTML();
+
+    //Reiniciar el formulario
+    formularioEl.reset();
 
     //¿Que pasa si el usuario no teclea nada y da a submit? Entonces debemos realizar una validacion
     if(tweetEl === '') {
@@ -44,7 +58,7 @@ function mostrarError(error) {
     //Ahora, creamos un elemento <p> de HTML
     const mensajeError = document.createElement('p');
 
-    //El mensaje de error ahora contiene el string que fue recibido desde la funcion agregarTweet
+    //El elemento de mensaje de error ahora contiene el string que fue recibido desde la funcion agregarTweet
     mensajeError.textContent = error;
 
     //Necesitamos darle estilo a ese mensaje de error, asi que en el CSS esta lista una clase llamada error. La agregamos al elemento
@@ -58,4 +72,31 @@ function mostrarError(error) {
     setTimeout(() => {
         mensajeError.remove();
     }, 3000);
+}
+
+// Muestra un listado de los tweets
+function crearHTML() {
+
+    //Para limpiar el HTML en el caso de que nuestro array empiece a tener mas de un valor
+    limpiarHTML();
+
+    if(tweets.length > 0) {
+        tweets.forEach( tweet => {
+            //Crear el HTML
+            const li = document.createElement('li');
+
+            //Añadir texto al elemento <li>
+            li.innerText = tweet.tweetEl;
+
+            // Insertarlo en el HTML
+            listaTweetsEl.appendChild(li);
+        });
+    }
+}
+
+// Limpiar el HTML
+function limpiarHTML() {
+    while(listaTweetsEl.firstChild) {
+        listaTweetsEl.removeChild(listaTweetsEl.firstChild);
+    }
 }
